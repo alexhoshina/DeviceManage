@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>echarts</title>
+    <!-- 引用 ECharts 最新版本的 CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
+</head>
+<body>
+<div id="main" style="width: 600px;height:400px;"></div>
+<div id="productChart" style="width: 600px;height:400px;"></div>
+<!-- 引用 jQuery 最新版本的 CDN -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script type="text/javascript">
+    // 初始化用户统计图表
+    var userChart = echarts.init(document.getElementById('main'));
+    // 初始化商品统计图表
+    var productChart = echarts.init(document.getElementById('productChart'));
+
+    // 通用的图表配置
+    function getChartOption(result, title) {
+        return {
+            title: {
+                text: title,
+                subtext: '',
+                left: 'center'
+            },
+            tooltip: {
+                trigger: 'item',
+            },
+            legend: {
+                orient: 'vertical',
+                left: 'left',
+            },
+            series: [
+                {
+                    name: title,
+                    type: 'pie',
+                    radius: '50%',
+                    data: result,
+                    itemStyle: {
+                        emphasis: {
+                            shadowBlur: 10,
+                            shadowOffsetX: 0,
+                            shadowColor: 'rgba(0,0,0,.5)'
+                        }
+                    }
+                }
+            ]
+        };
+    }
+
+    // 请求用户统计数据并设置图表选项
+    $.get("/admin/getChartByDept", function (result) {
+        userChart.setOption(getChartOption(result, '用户统计'));
+    });
+
+    $.get("/admin/getChartByStatus", function (result) {
+        productChart.setOption(getChartOption(result, '设备状态统计'));
+    });
+
+
+</script>
+</body>
+</html>

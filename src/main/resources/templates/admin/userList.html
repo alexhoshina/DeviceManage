@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>用户列表</title>
+</head>
+<body>
+<div class="container mt-5">
+    <!-- 搜索表单 -->
+    <form class="row g-3 mb-4" action="/admin/userList">
+        <div class="col-auto">
+            <input type="text" name="name" class="form-control" placeholder="姓名">
+        </div>
+        <div class="col-auto">
+            <select class="form-select" name="department">
+                <option selected value="">部门</option>
+                <option th:each="dept : ${depts}" th:text="${dept.departmentName}" th:value="${dept.departmentId}">部门</option>
+            </select>
+        </div>
+        <div class="col-auto">
+            <select class="form-select" name="position">
+                <option selected value="">职位</option>
+                <option th:each="pos : ${positions}" th:text="${pos.positionName}" th:value="${pos.positionId}">职位</option>
+            </select>
+        </div>
+        <div class="col-auto">
+            <button type="submit" class="btn btn-primary mb-3">搜索</button>
+        </div>
+        <div class="col-auto">
+            <a href="/admin/toUserAdd" class="btn btn-success">添加用户</a>
+        </div>
+    </form>
+
+
+
+    <!-- 用户表格 -->
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">姓名</th>
+            <th scope="col">部门</th>
+            <th scope="col">职位</th>
+            <th scope="col">联系方式</th>
+            <th scope="col">权限等级</th>
+            <th scope="col">操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- 使用 Thymeleaf 遍历用户列表 -->
+        <tr th:each="user : ${users}">
+            <td th:text="${user.userName}">姓名</td>
+            <td th:each="dept : ${depts}" th:if="${user.departmentId == dept.departmentId}" th:text="${dept.departmentName}">部门</td>
+            <td th:each="pos : ${positions}" th:if="${user.positionId == pos.positionId}" th:text="${pos.positionName}">职位</td>
+            <td th:text="${user.contact}">联系方式</td>
+            <td th:text="${user.accessLevel}">权限等级</td>
+            <td>
+                <a class="btn btn-sm btn-primary" th:href="@{/admin/userUpdate(id = ${user.userId})}">编辑</a>
+                <a class="btn btn-sm btn-danger" th:href="@{/admin/userDelete(id = ${user.userId})}">删除</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

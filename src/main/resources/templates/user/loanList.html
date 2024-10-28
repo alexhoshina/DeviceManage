@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>借用列表</title>
+</head>
+<body>
+<div class="container mt-5">
+    <!-- 搜索表单 -->
+    <form class="row g-3 mb-4" action="/user/loanList">
+        <div class="col-auto">
+            <input type="text" name="name" class="form-control" placeholder="设备名称">
+        </div>
+        <div class="col-auto">
+            <button type="submit" class="btn btn-primary mb-3">搜索</button>
+        </div>
+        <input type="hidden" name="userid" th:value="${session.current.userId}">
+    </form>
+
+    <!-- 未归还设备表格 -->
+    <h3>未归还设备</h3>
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">借用设备名称</th>
+            <th scope="col">借用日期</th>
+            <th scope="col">借用数量</th>
+            <th scope="col">预计归还日期</th>
+            <th scope="col">操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="loan : ${loans}" th:if="${loan.actualReturnDate == null}">
+            <td th:each="device : ${devices}" th:if="${loan.deviceId == device.deviceId}" th:text="${device.deviceName}">设备</td>
+            <td th:text="${loan.loanDate}">借用日期</td>
+            <td th:text="${loan.loanQuantity}">借用数量</td>
+            <td th:text="${loan.expectedReturnDate}">预计归还日期</td>
+            <td th:each="device : ${devices}" th:if="${loan.deviceId == device.deviceId}">
+                <a class="btn btn-sm btn-primary" th:href="@{/user/returnDevice(loanid=${loan.loanId}, userid=${session.current.userId})}">返还</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <!-- 已归还设备表格 -->
+    <h3>已归还设备</h3>
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">借用设备名称</th>
+            <th scope="col">借用日期</th>
+            <th scope="col">借用数量</th>
+            <th scope="col">预计归还日期</th>
+            <th scope="col">实际归还日期</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="loan : ${loans}" th:if="${loan.actualReturnDate != null}">
+            <td th:each="device : ${devices}" th:if="${loan.deviceId == device.deviceId}" th:text="${device.deviceName}">设备</td>
+            <td th:text="${loan.loanDate}">借用日期</td>
+            <td th:text="${loan.loanQuantity}">借用数量</td>
+            <td th:text="${loan.expectedReturnDate}">预计归还日期</td>
+            <td th:text="${loan.actualReturnDate}">实际归还日期</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

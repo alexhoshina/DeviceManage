@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>公用设备管理</title>
+</head>
+<body>
+<div class="container mt-4">
+    <h2 th:text="${device != null ? '编辑公用设备' : '添加公用设备'}"></h2>
+    <form action="/admin/deviceAdd"  method="post">
+        <input type="hidden" name="deviceId" th:value="${device != null ? device.deviceId : ''}" />
+
+        <div class="mb-3">
+            <label for="deviceName" class="form-label">设备名称</label>
+            <input type="text" id="deviceName" name="deviceName" class="form-control" th:value="${device != null ? device.deviceName : ''}" placeholder="设备名称">
+        </div>
+
+        <div class="mb-3">
+            <label for="deviceTypeId" class="form-label">类型</label>
+            <select class="form-select" id="deviceTypeId" name="deviceTypeId">
+                <option th:each="type : ${deviceTypes}"
+                        th:selected="${device != null and type.typeId == device.deviceTypeId}"
+                        th:text="${type.typeName}"
+                        th:value="${type.typeId}"
+                ></option>
+            </select>
+        </div>
+
+
+        <div class="mb-3">
+            <label for="deviceStatusId" class="form-label">状态</label>
+            <select class="form-select" id="deviceStatusId" name="deviceStatusId">
+                <option th:each="status : ${statuses}"
+                        th:selected="${device != null and status.statusId == device.deviceStatusId}"
+                        th:text="${status.statusName}"
+                        th:value="${status.statusId}"
+                ></option>
+            </select>
+        </div>
+
+        <div class="mb3">
+            <label for="availableQuantity" class="form-label">可用数量</label>
+            <input type="number" id="availableQuantity" name="availableQuantity" class="form-control" th:value="${device != null ? device.availableQuantity : ''}" placeholder="可用数量">
+        </div>
+
+        <div class="mb-3">
+            <label for="purchaseDate" class="form-label">购买日期</label>
+            <input type="date" id="purchaseDate" name="purchaseDate" class="form-control" th:value="${device != null ? device.purchaseDate : ''}" placeholder="购买日期" required pattern="\d{4}-\d{2}-\d{2}">
+        </div>
+
+        <button type="submit" class="btn btn-primary">提交</button>
+    </form>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>借用记录管理</title>
+</head>
+<body>
+<div class="container mt-4">
+    <h2 th:text="${loan != null ? '编辑借用记录' : '添加借用记录'}"></h2>
+    <form action="/admin/loanAdd"  method="post">
+        <input type="hidden" name="loanId" th:value="${loan != null ? loan.loanId : ''}" />
+
+        <div class="mb-3">
+            <label for="device" class="form-label">借用设备</label>
+            <select class="form-select" id="device" name="deviceId">
+                <option th:each="device : ${devices}"
+                        th:selected="${loan != null and device.deviceId == loan.deviceId}"
+                        th:text="${device.deviceName}"
+                        th:value="${device.deviceId}"
+                ></option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="user" class="form-label">借用人</label>
+            <select class="form-select" id="user" name="userId">
+                <option th:each="user : ${users}"
+                        th:selected="${loan != null and user.userId == loan.userId}"
+                        th:text="${user.userName}"
+                        th:value="${user.userId}"
+                ></option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="loanQuantity" class="form-label">借用数量</label>
+            <input type="text" id="loanQuantity" name="loanQuantity" class="form-control" th:value="${loan != null ? loan.loanQuantity : ''}" placeholder="借用数量">
+            <span th:if="${msg != null}" th:text="${msg}" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label for="loanDate" class="form-label">借用日期</label>
+            <input type="date" id="loanDate" name="loanDate" class="form-control" th:value="${loan != null ? loan.loanDate : ''}" placeholder="借用日期" required pattern="\d{4}-\d{2}-\d{2}">
+        </div>
+
+        <div class="mb-3">
+            <label for="expectedReturnDate" class="form-label">预计归还日期</label>
+            <input type="date" id="expectedReturnDate" name="expectedReturnDate" class="form-control" th:value="${loan != null ? loan.expectedReturnDate : null}" placeholder="预计归还日期" required pattern="\d{4}-\d{2}-\d{2}">
+        </div>
+
+        <div class="mb-3">
+            <label for="actualReturnDate" class="form-label">实际归还日期</label>
+            <input type="date" id="actualReturnDate" name="actualReturnDate" class="form-control" th:value="${loan != null ? loan.actualReturnDate : null}" placeholder="实际归还日期" pattern="\d{4}-\d{2}-\d{2}">
+        </div>
+
+        <button type="submit" class="btn btn-primary">保存</button>
+    </form>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>设备列表</title>
+</head>
+<body>
+<div class="container mt-5">
+    <!-- 搜索表单 -->
+    <form class="row g-3 mb-4" action="/user/deviceList">
+        <div class="col-auto">
+            <input type="text" name="name" class="form-control" placeholder="设备名称">
+        </div>
+        <div class="col-auto">
+            <select class="form-select" name="devicetype">
+                <option selected value="">类型</option>
+                <option th:each="type : ${DeviceTypes}" th:value="${type.typeId}" th:text="${type.typeName}"></option>
+            </select>
+        </div>
+        <div class="col-auto">
+            <select class="form-select" name="status">
+                <option selected value="">状态</option>
+                <option th:each="status : ${Statuses}" th:value="${status.statusId}" th:text="${status.statusName}"></option>
+            </select>
+        </div>
+
+        <div class="col-auto">
+            <button type="submit" class="btn btn-primary mb-3">搜索</button>
+        </div>
+    </form>
+
+    <p th:if="${msg != null}" th:text="${msg}"></p>
+    <!-- 设备表格 -->
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">名称</th>
+            <th scope="col">类型</th>
+            <th scope="col">状态</th>
+            <th scope="col">数量</th>
+            <th scope="col">操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- 使用 Thymeleaf 遍历设备列表 -->
+        <tr th:each="device : ${devices}">
+            <td th:text="${device.getDeviceName}">名称</td>
+            <td th:each="type : ${DeviceTypes}" th:if="${device.deviceTypeId == type.typeId}" th:text="${type.typeName}">类型</td>
+            <td th:each="status : ${Statuses}" th:if="${device.deviceStatusId == status.statusId}" th:text="${status.statusName}">状态</td>
+            <td th:text="${device.availableQuantity}">数量</td>
+            <td>
+                <!-- 添加的借用数量输入框和表单 -->
+                <form method="post" action="/user/deviceLoan">
+                    <input type="hidden" name="deviceid" th:value="${device.deviceId}">
+                    <input type="hidden" name="userid" th:value="${session.current.userId}">
+                    <input type="number" name="borrowQuantity" class="form-control form-control-sm mb-2" placeholder="借用数量" min="1" required>
+                    <button type="submit" class="btn btn-sm btn-primary" th:classappend="${device.deviceStatusId != 1 ? 'disabled' : ''}">申请借用</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

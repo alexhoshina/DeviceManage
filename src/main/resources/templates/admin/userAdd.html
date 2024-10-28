@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>添加/编辑用户</title>
+</head>
+<body>
+<div class="container mt-4">
+    <h2 th:text="${user != null ? '编辑用户' : '添加用户'}"></h2>
+    <form action="/admin/userAdd"  method="post">
+        <input type="hidden" name="userId" th:value="${user != null ? user.userId : ''}" />
+
+        <div class="mb-3">
+            <label for="name" class="form-label">姓名</label>
+            <input type="text" id="name" name="userName" class="form-control" th:value="${user != null ? user.userName : ''}" placeholder="姓名">
+        </div>
+
+        <div class="mb-3">
+            <label for="password" class="form-label">密码</label>
+            <input type="password" id="password" name="password" class="form-control" th:value="${user != null ? user.password : ''}" placeholder="密码">
+        </div>
+
+        <div class="mb-3">
+            <label for="department" class="form-label">部门</label>
+            <select class="form-select" id="department" name="departmentId">
+                <option th:each="dept : ${depts}"
+                        th:selected="${user != null and dept.departmentId == user.departmentId}"
+                        th:text="${dept.departmentName}"
+                        th:value="${dept.departmentId}"
+                ></option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="position" class="form-label">职位</label>
+            <select class="form-select" id="position" name="positionId">
+                <option th:each="pos : ${positions}"
+                        th:selected="${user != null and pos.positionId == user.positionId}"
+                        th:text="${pos.positionName}"
+                        th:value="${pos.positionId}"
+                ></option>
+            </select>
+        </div>
+
+
+        <div class="mb-3">
+            <label for="contact" class="form-label">联系方式</label>
+            <input type="text" id="contact" name="contact" class="form-control" th:value="${user != null ? user.contact : ''}" placeholder="联系方式">
+        </div>
+
+        <div class="mb-3">
+            <label for="accessLevel" class="form-label">权限等级</label>
+            <input type="text" id="accessLevel" name="accessLevel" class="form-control" th:value="${user != null ? user.accessLevel : ''}" placeholder="权限等级">
+        </div>
+        <button type="submit" class="btn btn-primary">提交</button>
+    </form>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
